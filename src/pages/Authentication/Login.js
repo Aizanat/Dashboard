@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import {
   Card,
   CardBody,
@@ -75,7 +75,7 @@ const Login = (props) => {
     },
   })
 
-  const signIn = (res, type) => {
+  const signInSM = (res, type) => {
     if (type === 'google' && res) {
       const postData = {
         name: res.profileObj.name,
@@ -97,7 +97,7 @@ const Login = (props) => {
 
   //handleGoogleLoginResponse
   const googleResponse = (response) => {
-    signIn(response, 'google')
+    signInSM(response, 'google')
   }
 
   //handleTwitterLoginResponse
@@ -105,7 +105,7 @@ const Login = (props) => {
 
   //handleFacebookLoginResponse
   const facebookResponse = (response) => {
-    signIn(response, 'facebook')
+    signInSM(response, 'facebook')
   }
 
   useEffect(() => {
@@ -161,16 +161,15 @@ const Login = (props) => {
                       >
                         <div className="mb-3">
                           <Label htmlFor="email" className="form-label">
-                            Email
+                            Phone number
                           </Label>
                           <Input
                             name="email"
                             className="form-control"
-                            placeholder="Enter email"
+                            placeholder="Enter phone number"
                             type="email"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
-                            value={validation.values.email || ''}
                             invalid={
                               validation.touched.email &&
                               validation.errors.email
@@ -201,10 +200,9 @@ const Login = (props) => {
                           <div className="position-relative auth-pass-inputgroup mb-3">
                             <Input
                               name="password"
-                              value={validation.values.password || ''}
                               type={passwordShow ? 'text' : 'password'}
                               className="form-control pe-5"
-                              placeholder="Enter Password"
+                              placeholder="Enter password"
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
@@ -252,6 +250,7 @@ const Login = (props) => {
                             color="success"
                             className="btn btn-success w-100"
                             type="submit"
+                            // onClick={handleRegistration}
                           >
                             {error ? null : loading ? (
                               <Spinner size="sm" className="me-2">

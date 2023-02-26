@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Row,
   Col,
@@ -10,7 +10,6 @@ import {
   Label,
   Form,
   FormFeedback,
-  Button,
 } from 'reactstrap'
 
 // Formik Validation
@@ -33,6 +32,13 @@ import logoLight from '../../assets/images/logo-light.png'
 import ParticlesAuth from '../AuthenticationInner/ParticlesAuth'
 
 const Register = () => {
+  const [email, setEmail] = useState('')
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordShow, setPasswordShow] = useState(false)
+  const [confirmPasswordShow, setConfirmPasswordShow] = useState(false)
+
   const history = useNavigate()
   const dispatch = useDispatch()
 
@@ -75,20 +81,47 @@ const Register = () => {
 
   useEffect(() => {
     if (success) {
-      setTimeout(() => history('/login'), 3000)
+      history('/login')
     }
 
-    setTimeout(() => {
-      dispatch(resetRegisterFlag())
-    }, 3000)
-  }, [dispatch, success, error, history])
+    dispatch(resetRegisterFlag())
+  }, [dispatch, success, history])
+
+  const AWS = require('aws-sdk')
+  const cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider(
+    { region: 'us-east-1' }
+  )
+
+  const params = {
+    ClientId: '10l0p0blh550oasf9orjbbaoe1',
+    Username: email,
+    Password: password,
+    UserAttributes: [{ Name: 'email', Value: email }],
+  }
+
+  const handleRegistration = (event) => {
+    event.preventDefault()
+
+    if (params.Password !== confirmPassword) {
+      console.log('Passwords do not match')
+      return
+    }
+
+    cognitoidentityserviceprovider.signUp(params, function (err, data) {
+      if (err) {
+        console.log('Failed to register - ', err, err.stack)
+      } else {
+        console.log('Registered successfully - ', data)
+      }
+    })
+  }
 
   document.title = 'Basic SignUp | Velzon - React Admin & Dashboard Template'
 
   return (
     <React.Fragment>
       <ParticlesAuth>
-        <div className="auth-page-content">
+        <div className="auth-page-content" onSubmit={handleRegistration}>
           <Container>
             <Row>
               <Col lg={12}>
@@ -162,9 +195,12 @@ const Register = () => {
                             className="form-control"
                             placeholder="Enter email address"
                             type="email"
-                            onChange={validation.handleChange}
+                            value={email}
+                            onChange={(event) => {
+                              setEmail(event.target.value)
+                              validation.handleChange(event)
+                            }}
                             onBlur={validation.handleBlur}
-                            value={validation.values.email || ''}
                             invalid={
                               validation.touched.email &&
                               validation.errors.email
@@ -187,9 +223,12 @@ const Register = () => {
                             name="first_name"
                             type="text"
                             placeholder="Enter username"
-                            onChange={validation.handleChange}
+                            value={username}
+                            onChange={(event) => {
+                              setUsername(event.target.value)
+                              validation.handleChange(event)
+                            }}
                             onBlur={validation.handleBlur}
-                            value={validation.values.first_name || ''}
                             invalid={
                               validation.touched.first_name &&
                               validation.errors.first_name
@@ -209,26 +248,39 @@ const Register = () => {
                           <Label htmlFor="userpassword" className="form-label">
                             Password <span className="text-danger">*</span>
                           </Label>
-                          <Input
-                            name="password"
-                            type="password"
-                            placeholder="Enter Password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.password || ''}
-                            invalid={
-                              validation.touched.password &&
-                              validation.errors.password
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.password &&
-                          validation.errors.password ? (
-                            <FormFeedback type="invalid">
-                              <div>{validation.errors.password}</div>
-                            </FormFeedback>
-                          ) : null}
+                          <div className="position-relative auth-pass-inputgroup mb-3">
+                            <Input
+                              name="password"
+                              type={passwordShow ? 'text' : 'password'}
+                              placeholder="Enter Password"
+                              value={password}
+                              onChange={(event) => {
+                                setPassword(event.target.value)
+                                validation.handleChange(event)
+                              }}
+                              onBlur={validation.handleBlur}
+                              invalid={
+                                validation.touched.password &&
+                                validation.errors.password
+                                  ? true
+                                  : false
+                              }
+                            />
+                            {validation.touched.password &&
+                            validation.errors.password ? (
+                              <FormFeedback type="invalid">
+                                <div>{validation.errors.password}</div>
+                              </FormFeedback>
+                            ) : null}
+                            <button
+                              className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                              type="button"
+                              id="password-addon"
+                              onClick={() => setPasswordShow(!passwordShow)}
+                            >
+                              <i className="ri-eye-fill align-middle"></i>
+                            </button>
+                          </div>
                         </div>
 
                         <div className="mb-2">
@@ -239,26 +291,42 @@ const Register = () => {
                             Confirm Password{' '}
                             <span className="text-danger">*</span>
                           </Label>
-                          <Input
-                            name="confirm_password"
-                            type="password"
-                            placeholder="Confirm Password"
-                            onChange={validation.handleChange}
-                            onBlur={validation.handleBlur}
-                            value={validation.values.confirm_password || ''}
-                            invalid={
-                              validation.touched.confirm_password &&
-                              validation.errors.confirm_password
-                                ? true
-                                : false
-                            }
-                          />
-                          {validation.touched.confirm_password &&
-                          validation.errors.confirm_password ? (
-                            <FormFeedback type="invalid">
-                              <div>{validation.errors.confirm_password}</div>
-                            </FormFeedback>
-                          ) : null}
+                          <div className="position-relative auth-pass-inputgroup mb-3">
+                            <Input
+                              name="confirm_password"
+                              type={confirmPasswordShow ? 'text' : 'password'}
+                              placeholder="Confirm Password"
+                              value={confirmPassword}
+                              onChange={(event) => {
+                                setConfirmPassword(event.target.value)
+                                validation.handleChange(event)
+                              }}
+                              onBlur={validation.handleBlur}
+                              invalid={
+                                validation.touched.confirm_password &&
+                                validation.errors.confirm_password
+                                  ? true
+                                  : false
+                              }
+                            />
+
+                            {validation.touched.confirm_password &&
+                            validation.errors.confirm_password ? (
+                              <FormFeedback type="invalid">
+                                <div>{validation.errors.confirm_password}</div>
+                              </FormFeedback>
+                            ) : null}
+                            <button
+                              className="btn btn-link position-absolute end-0 top-0 text-decoration-none text-muted"
+                              type="button"
+                              id="password-show"
+                              onClick={() =>
+                                setConfirmPasswordShow(!confirmPasswordShow)
+                              }
+                            >
+                              <i className="ri-eye-fill align-middle"></i>
+                            </button>
+                          </div>
                         </div>
 
                         <div className="mb-4">
