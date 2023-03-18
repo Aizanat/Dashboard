@@ -31,7 +31,7 @@
     "echarts": "^5.3.0",
     "echarts-for-react": "^3.0.2",
     "emoji-picker-react": "^3.5.1",
-    "eslint": "^8.9.0",
+    "eslint": "^7.32.0 || ^8.2.0",
     "feather-icons-react": "^0.5.0",
     "filepond": "^4.30.3",
     "filepond-plugin-image-exif-orientation": "^1.0.11",
@@ -81,7 +81,7 @@
     "react-rating": "^2.0.5",
     "react-redux": "^7.2.6",
     "react-responsive-carousel": "^3.2.22",
-    "react-router-dom": "^6.8.1",
+    "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.0",
     "react-scrollspy": "^3.4.3",
     "react-select": "^5.2.2",
@@ -115,43 +115,6 @@
       "@babel/preset-react"
     ]
   },
-  "eslintConfig": {
-    "extends": [
-      "eslint:recommended",
-      "plugin:react/recommended",
-      "react-app"
-    ],
-    "parser": "@babel/eslint-parser",
-    "parserOptions": {
-      "requireConfigFile": false,
-      "ecmaVersion": 2020,
-      "sourceType": "module",
-      "ecmaFeatures": {
-        "jsx": true
-      }
-    },
-    "env": {
-      "browser": true,
-      "es6": true
-    },
-    "globals": {
-      "$": true
-    },
-    "settings": {
-      "react": {
-        "version": "^17.0.1"
-      }
-    },
-    "rules": {
-      "semi": 0,
-      "react/no-unescaped-entities": 0,
-      "react/react-in-jsx-scope": "off",
-      "react/prop-types": "off",
-      "no-unused-vars": "off",
-      "no-extra-boolean-cast": 0,
-      "react/no-unknown-property": "off"
-    }
-  },
   "browserslist": {
     "production": [
       ">0.2%",
@@ -169,6 +132,11 @@
     "autoprefixer": "10.4.5"
   },
   "devDependencies": {
-    "babel-plugin-prismjs": "^2.1.0"
+    "babel-plugin-prismjs": "^2.1.0",
+    "eslint-config-airbnb": "^19.0.4",
+    "eslint-plugin-import": "^2.25.3",
+    "eslint-plugin-jsx-a11y": "^6.5.1",
+    "eslint-plugin-react": "^7.28.0",
+    "eslint-plugin-react-hooks": "^4.3.0"
   }
 }

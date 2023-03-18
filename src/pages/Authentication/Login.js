@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Card,
   CardBody,
@@ -37,7 +37,17 @@ import { facebook, google } from '../../config'
 
 import withRouter from '../../Components/Common/withRouter'
 
+import { Amplify, Auth } from 'aws-amplify'
+import awsconfig from '../../aws-exports'
+
+import withAuth from '../../Components/Common/AuthWrapper'
+
+Amplify.configure(awsconfig)
+
 const Login = (props) => {
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+
   const dispatch = useDispatch()
   const { user, errorMsg, loading, error } = useSelector((state) => ({
     user: state.Account.user,
@@ -63,17 +73,24 @@ const Login = (props) => {
     enableReinitialize: true,
 
     initialValues: {
-      email: userLogin.email || 'admin@themesbrand.com' || '',
-      password: userLogin.password || '123456' || '',
+      email: '',
+      password: '',
     },
     validationSchema: Yup.object({
       email: Yup.string().required('Please Enter Your Email'),
       password: Yup.string().required('Please Enter Your Password'),
     }),
-    onSubmit: (values) => {
-      dispatch(loginUser(values, props.router.navigate))
+    onSubmit: async (values) => {
+      const { email, password } = values
+      const response = await dispatch(loginUser(values, props.router.navigate))
+      console.log('response', response)
+      if (response && response.token) {
+        localStorage.setItem('token', response.token)
+      }
     },
   })
+
+  console.log(localStorage.getItem('token'))
 
   const signInSM = (res, type) => {
     if (type === 'google' && res) {
@@ -87,7 +104,7 @@ const Login = (props) => {
     } else if (type === 'facebook' && res) {
       const postData = {
         name: res.name,
-        email: res.email,
+        email: res.email || '',
         token: res.accessToken,
         idToken: res.tokenId,
       }
@@ -116,11 +133,20 @@ const Login = (props) => {
     }
   }, [dispatch, error])
 
+  async function handleLogin(email, password) {
+    try {
+      const user = await Auth.signIn(String(email), password)
+      console.log('User:', user)
+    } catch (error) {
+      console.log('Error:', error.message)
+    }
+  }
+
   document.title = 'Basic SignIn | Velzon - React Admin & Dashboard Template'
   return (
     <React.Fragment>
       <ParticlesAuth>
-        <div className="auth-page-content">
+        <div className="auth-page-content" onSubmit={handleLogin}>
           <Container>
             <Row>
               <Col lg={12}>
@@ -155,27 +181,37 @@ const Login = (props) => {
                         onSubmit={(e) => {
                           e.preventDefault()
                           validation.handleSubmit()
+                          handleLogin(email, password)
                           return false
                         }}
                         action="#"
                       >
                         <div className="mb-3">
                           <Label htmlFor="email" className="form-label">
-                            Phone number
+                            Email
                           </Label>
                           <Input
                             name="email"
                             className="form-control"
-                            placeholder="Enter phone number"
+                            placeholder="Enter email address"
                             type="email"
-                            onChange={validation.handleChange}
+                            // onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
+                            // invalid={
+                            //   validation.touched.email &&
+                            //   validation.errors.email
+                            //     ? true
+                            //     : false
+                            // }
                             invalid={
                               validation.touched.email &&
-                              validation.errors.email
-                                ? true
-                                : false
+                              !!validation.errors.email
                             }
+                            {...validation.getFieldProps('email')}
+                            onChange={(event) => {
+                              setEmail(event.target.value)
+                              validation.handleChange(event)
+                            }}
                           />
                           {validation.touched.email &&
                           validation.errors.email ? (
@@ -203,14 +239,23 @@ const Login = (props) => {
                               type={passwordShow ? 'text' : 'password'}
                               className="form-control pe-5"
                               placeholder="Enter password"
-                              onChange={validation.handleChange}
+                              // onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
+                              // invalid={
+                              //   validation.touched.password &&
+                              //   validation.errors.password
+                              //     ? true
+                              //     : false
+                              // }
                               invalid={
                                 validation.touched.password &&
-                                validation.errors.password
-                                  ? true
-                                  : false
+                                !!validation.errors.password
                               }
+                              {...validation.getFieldProps('password')}
+                              onChange={(event) => {
+                                setPassword(event.target.value)
+                                validation.handleChange(event)
+                              }}
                             />
                             {validation.touched.password &&
                             validation.errors.password ? (
@@ -250,7 +295,6 @@ const Login = (props) => {
                             color="success"
                             className="btn btn-success w-100"
                             type="submit"
-                            // onClick={handleRegistration}
                           >
                             {error ? null : loading ? (
                               <Spinner size="sm" className="me-2">
@@ -333,3 +377,6 @@ const Login = (props) => {
 }
 
 export default withRouter(Login)
+// export default withAuth(Login)
+
+// http://localhost:3000/confirm?email=aliarystan@gmail.com&code=123456

@@ -30,7 +30,7 @@ yarn.lock
 
 #amplify-do-not-edit-begin
 amplify/\#current-cloud-backend
-amplify/.config/local-*
+amplify/./local-*
 amplify/logs
 amplify/mock-data
 amplify/mock-api-resources

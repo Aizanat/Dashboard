@@ -81,7 +81,7 @@ const Register = () => {
 
   useEffect(() => {
     if (success) {
-      history('/login')
+      history('/confirmsignup')
     }
 
     dispatch(resetRegisterFlag())
@@ -160,7 +160,7 @@ const Register = () => {
                       >
                         {success && success ? (
                           <>
-                            {toast('Your Redirect To Login Page...', {
+                            {toast('Your Redirect To ConfirmSignUp Page...', {
                               position: 'top-right',
                               hideProgressBar: false,
                               className: 'bg-success text-white',
@@ -170,7 +170,7 @@ const Register = () => {
                             <ToastContainer autoClose={2000} limit={1} />
                             <Alert color="success">
                               Register User Successfully and Your Redirect To
-                              Login Page...
+                              ConfirmSignUp Page...
                             </Alert>
                           </>
                         ) : null}
@@ -215,6 +215,7 @@ const Register = () => {
                             </FormFeedback>
                           ) : null}
                         </div>
+
                         <div className="mb-3">
                           <Label htmlFor="username" className="form-label">
                             Username <span className="text-danger">*</span>

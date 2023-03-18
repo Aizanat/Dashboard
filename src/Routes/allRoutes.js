@@ -192,6 +192,7 @@ import Login from '../pages/Authentication/Login'
 import ForgetPasswordPage from '../pages/Authentication/ForgetPassword'
 import Logout from '../pages/Authentication/Logout'
 import Register from '../pages/Authentication/Register'
+import ConfirmSignUp from '../pages/Authentication/ConfirmSignUp'
 
 //Charts
 import LineCharts from '../pages/Charts/ApexCharts/LineCharts'
@@ -468,6 +469,7 @@ const publicRoutes = [
   { path: '/login', component: <Login /> },
   { path: '/forgot-password', component: <ForgetPasswordPage /> },
   { path: '/register', component: <Register /> },
+  { path: '/confirmsignup', component: <ConfirmSignUp /> },
 
   //AuthenticationInner pages
   { path: '/auth-signin-basic', component: <BasicSignIn /> },

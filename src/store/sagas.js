@@ -1,67 +1,68 @@
-import { all, fork } from "redux-saga/effects";
+import { all, fork } from 'redux-saga/effects'
 //layout
-import LayoutSaga from "./layouts/saga";
+import LayoutSaga from './layouts/saga'
 //Auth
-import AccountSaga from "./auth/register/saga";
-import AuthSaga from "./auth/login/saga";
-import ForgetSaga from "./auth/forgetpwd/saga";
-import ProfileSaga from "./auth/profile/saga";
+import AccountSaga from './auth/register/saga'
+import AuthSaga from './auth/login/saga'
+import ForgetSaga from './auth/forgetpwd/saga'
+import ProfileSaga from './auth/profile/saga'
+import ConfirmEmail from './auth/confirmsignup/saga'
 
 //calendar
-import calendarSaga from "./calendar/saga";
+import calendarSaga from './calendar/saga'
 //chat
-import chatSaga from "./chat/saga";
+import chatSaga from './chat/saga'
 //ecommerce
-import ecommerceSaga from "./ecommerce/saga";
+import ecommerceSaga from './ecommerce/saga'
 
 //Project
-import projectSaga from "./projects/saga";
+import projectSaga from './projects/saga'
 // Task
-import taskSaga from "./tasks/saga";
+import taskSaga from './tasks/saga'
 // Crypto
-import cryptoSaga from "./crypto/saga";
+import cryptoSaga from './crypto/saga'
 //TicketsList
-import ticketsSaga from "./tickets/saga";
+import ticketsSaga from './tickets/saga'
 
 //crm
-import crmSaga from "./crm/saga";
+import crmSaga from './crm/saga'
 //invoice
-import invoiceSaga from "./invoice/saga";
+import invoiceSaga from './invoice/saga'
 //mailbox
-import mailboxSaga from "./mailbox/saga";
+import mailboxSaga from './mailbox/saga'
 
 // Dashboard Analytics
-import dashboardAnalyticsSaga from "./dashboardAnalytics/saga";
+import dashboardAnalyticsSaga from './dashboardAnalytics/saga'
 
 // Dashboard CRM
-import dashboardCrmSaga from "./dashboardCRM/saga";
+import dashboardCrmSaga from './dashboardCRM/saga'
 
 // Dashboard Ecommerce
-import dashboardEcommerceSaga from "./dashboardEcommerce/saga";
+import dashboardEcommerceSaga from './dashboardEcommerce/saga'
 
 // Dashboard Crypto
-import dashboardCryptoSaga from "./dashboardCrypto/saga";
+import dashboardCryptoSaga from './dashboardCrypto/saga'
 
 // Dashboard Project
-import dashboardProjectSaga from "./dashboardProject/saga";
+import dashboardProjectSaga from './dashboardProject/saga'
 
 // Dashboard NFT
-import dashboardNFTSaga from "./dashboardNFT/saga";
+import dashboardNFTSaga from './dashboardNFT/saga'
 
 // Pages > Team
-import teamSaga from "./team/saga";
+import teamSaga from './team/saga'
 
 // File Manager
-import fileManager from "./fileManager/saga";
+import fileManager from './fileManager/saga'
 
 // To do
-import todos from "./todos/saga"
+import todos from './todos/saga'
 
 //Job
-import jobSaga from "./job/saga";
+import jobSaga from './job/saga'
 
 //API Key
-import APIKeysaga from "./apikey/saga";
+import APIKeysaga from './apikey/saga'
 
 export default function* rootSaga() {
   yield all([
@@ -71,6 +72,7 @@ export default function* rootSaga() {
     fork(AuthSaga),
     fork(ForgetSaga),
     fork(ProfileSaga),
+    fork(ConfirmEmail),
     fork(chatSaga),
     fork(projectSaga),
     fork(taskSaga),
@@ -92,5 +94,5 @@ export default function* rootSaga() {
     fork(todos),
     fork(jobSaga),
     fork(APIKeysaga),
-  ]);
+  ])
 }
